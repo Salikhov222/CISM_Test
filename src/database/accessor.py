@@ -3,12 +3,14 @@ from collections.abc import AsyncGenerator
 from sqlalchemy import exc
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 
-from src.config import db_settings
+from src.config import settings
+from src.exceptions import DatabaseError
 
 
 engine = create_async_engine(
-    db_settings.get_postgres_uri.unicode_string(),
-    echo=True   # логирование запросов
+    settings.get_postgres_uri.unicode_string(),
+    echo=True,   # логирование запросов
+    pool_pre_ping=True
     )
 
 AsyncSessionFactory = async_sessionmaker(
@@ -24,6 +26,6 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
             yield session
         except exc.SQLAlchemyError as error:
             await session.rollback()
-            raise error
+            raise DatabaseError(f'Database error occurred')
 
     

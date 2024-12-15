@@ -1,25 +1,39 @@
 from src.repository import TaskRepository
 from src.schemas import Task, TaskCreate
-from src.exceptions import TaskNotFound
+from src.exceptions import TaskNotFound, DatabaseError
+from src.broker.accessor import BrokerAccessor
+from src.config import settings
 
 
 class TasksService:
 
-    def __init__(self, task_repository: TaskRepository):
+    def __init__(self, task_repository: TaskRepository, broker: BrokerAccessor):
         self.task_repository = task_repository
+        self.broker = broker
 
-    async def get_all_tasks(self) -> list[Task]:
-        tasks = await self.task_repository.get_all()
+    async def get_all_tasks(self, status: str | None) -> list[Task]:
+        tasks = await self.task_repository.get_all(status=status)
         tasks_schema = [Task.model_validate(task) for task in tasks]
         return tasks_schema
     
     async def get_task_by_task_id(self, task_id: int) -> Task:
-        task = await self.task_repository.get(task_id=task_id)
+        task = await self.task_repository.get_task(task_id=task_id)
         if not task:
             raise TaskNotFound(f'Task {task_id} not found')
         return Task.model_validate(task)
     
     async def create_task(self, task_data: TaskCreate) -> Task:
-        task_id = await self.task_repository.add(task_data=task_data)
-        task = await self.task_repository.get(task_id=task_id)
+        task = await self.task_repository.create_task(task_data=task_data)
+        if not task:
+            raise DatabaseError("Task could not be created due to an internal error")
+
+        await self.broker.publish_message(
+            message={
+                "id": task.id,
+                "name": task.title
+            },
+            routing_key=settings.RABBITMQ_QUEUE
+        )
+    
         return Task.model_validate(task)
+    

@@ -2,13 +2,17 @@ from pydantic import PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class PostgresSettings(BaseSettings):
+class Settings(BaseSettings):
 
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
     POSTGRES_DB: str
-    POSTGRES_PORT: int = 5432 
+    POSTGRES_PORT: int = 5432
+
+    AMQP_URL: str = 'amqp://guest:guest@localhost:5672//'
+    RABBITMQ_QUEUE: str = "tasks_queue"
+    RABBITMQ_EXCHANGE: str = "tasks_exchange" 
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
     
@@ -44,4 +48,4 @@ class PostgresSettings(BaseSettings):
             path=self.POSTGRES_DB
         )
 
-db_settings = PostgresSettings()
+settings = Settings()

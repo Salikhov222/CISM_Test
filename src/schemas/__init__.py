@@ -1,3 +1,3 @@
-from src.schemas.tasks import Task, TaskCreate
+from src.schemas.tasks import Task, TaskCreate, TaskStatus
 
-__all__ = ["Task", "TaskCreate"]
+__all__ = ["Task", "TaskCreate", "TaskStatus"]

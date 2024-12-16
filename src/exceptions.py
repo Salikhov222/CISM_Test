@@ -3,3 +3,6 @@ class TaskNotFound(Exception):
 
 class DatabaseError(Exception):
     pass
+
+class PublishTaskToBroker(Exception):
+    pass

@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from src.models import *
-from src.config import db_settings
+from src.config import settings
 from src.database import Base
 
 # this is the Alembic Config object, which provides
@@ -27,7 +27,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-config.set_main_option("sqlalchemy.url", db_settings.get_postgres_uri.unicode_string())
+config.set_main_option("sqlalchemy.url", settings.get_postgres_uri.unicode_string())
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

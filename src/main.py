@@ -8,19 +8,21 @@ from src.broker.worker import run_worker
 from src.routes.tasks import router as task_router
 from src.broker.accessor import broker
 
-
+    
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Управление жизненным циклом приложения."""
     # Подключаемся к RabbitMQ
-    await broker.connect()
-    await broker.declare_queue()
-    task_repository = TaskRepository()
+    try:
+        await broker.connect()
+        await broker.declare_queue()
 
-    print("Connected to RabbitMQ")
+        print("Connected to RabbitMQ")
 
+    except Exception as e:
+        raise RuntimeError("No connection to broker") from e
     # Запускаем воркера в фоновом режиме
-    worker_task = asyncio.create_task(run_worker(broker,task_repository))
+    worker_task = asyncio.create_task(run_worker(broker))
     print("Worker started")
 
     try:
@@ -31,6 +33,11 @@ async def lifespan(app: FastAPI):
         await broker.close()
         print("RabbitMQ connection closed")
 
-app =  FastAPI(lifespan=lifespan)
+app =  FastAPI(
+    title="Task management service",
+    summary="Simple task management service",
+    lifespan=lifespan
+    )
+
 app.include_router(task_router)
 

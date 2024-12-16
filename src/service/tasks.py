@@ -1,6 +1,6 @@
 from src.repository import TaskRepository
 from src.schemas import Task, TaskCreate
-from src.exceptions import TaskNotFound, DatabaseError
+from src.exceptions import TaskNotFound, PublishTaskToBroker
 from src.broker.accessor import BrokerAccessor
 from src.config import settings
 
@@ -24,16 +24,16 @@ class TasksService:
     
     async def create_task(self, task_data: TaskCreate) -> Task:
         task = await self.task_repository.create_task(task_data=task_data)
-        if not task:
-            raise DatabaseError("Task could not be created due to an internal error")
-
-        await self.broker.publish_message(
-            message={
-                "id": task.id,
-                "name": task.title
-            },
-            routing_key=settings.RABBITMQ_QUEUE
-        )
-    
+        
+        try:
+            await self.broker.publish_message(
+                message={
+                    "id": task.id,
+                    "name": task.title
+                },
+                routing_key=settings.RABBITMQ_QUEUE
+            )
+        except Exception as e:
+            raise PublishTaskToBroker("The task was created but could not be queued.")
         return Task.model_validate(task)
     

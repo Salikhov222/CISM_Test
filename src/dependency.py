@@ -1,6 +1,5 @@
 from typing import Annotated
 
-
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,16 +15,17 @@ async def get_task_repository(
 ) -> TaskRepository:
     return TaskRepository(db_session=db_session)
 
+async def get_broker() -> BrokerAccessor:
+    from src.main import broker
+
+    return broker
+
 async def get_tasks_service(
     task_repository: Annotated[TaskRepository, Depends(get_task_repository)],
-    broker: Annotated[BrokerAccessor, Depends()]
+    broker: Annotated[BrokerAccessor, Depends(get_broker)]
 ) -> TasksService:
     return TasksService(
         task_repository=task_repository, 
         broker=broker
     )
 
-# async def get_broker() -> BrokerAccessor:
-#     if broker._connection is None:
-#         raise RuntimeError("Broker is not connected. Ensure the application lifecycle is correctly managed.")
-#     return broker

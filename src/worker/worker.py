@@ -51,5 +51,10 @@ async def run_worker(broker: BrokerAccessor):
     logging.info(f"Worker listening on queue: {queue}")
     await queue.consume(lambda message: process_task(message))
 
+    try:
+        await asyncio.Future()  # поддерживание брокера активным
+    finally:
+        await broker.close()
+
 if __name__ == "__main__":
     asyncio.run(run_worker(broker=broker))

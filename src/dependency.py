@@ -16,6 +16,7 @@ async def get_task_repository(
     return TaskRepository(db_session=db_session)
 
 async def get_broker() -> BrokerAccessor:
+    await broker.connect()
     return broker
 
 async def get_tasks_service(

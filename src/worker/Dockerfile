@@ -9,4 +9,4 @@ COPY src/ .
 
 ENV PYTHONPATH /
 
-CMD ["python", "/src/worker/worker.py"]
+CMD ["sh", "-c", "sleep 10 && python /src/worker/worker.py"]

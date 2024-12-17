@@ -9,7 +9,7 @@ from src.exceptions import DatabaseError
 
 engine = create_async_engine(
     settings.get_postgres_uri.unicode_string(),
-    echo=True,   # логирование запросов
+    # echo=True,   # логирование запросов
     pool_pre_ping=True
     )
 

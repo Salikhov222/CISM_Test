@@ -10,7 +10,11 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_PORT: int = 5432
 
-    AMQP_URL: str = 'amqp://guest:guest@localhost:5672//'
+    # AMQP_URL: str = 'amqp://guest:guest@rabbitmq:5672//'
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
+    RABBITMQ_HOST: str
+    RABBITMQ_PORT: int = 5672
     RABBITMQ_QUEUE: str = "tasks_queue"
     RABBITMQ_EXCHANGE: str = "tasks_exchange" 
 

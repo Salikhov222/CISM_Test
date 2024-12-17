@@ -5,6 +5,7 @@ from aio_pika.abc import AbstractChannel, AbstractConnection, AbstractExchange
 
 from src.config import settings
 
+AMQP_URL = f"amqp://{settings.RABBITMQ_USER}:{settings.RABBITMQ_PASSWORD}@{settings.RABBITMQ_HOST}:{settings.RABBITMQ_PORT}/"
 
 class BrokerAccessor:
     def __init__(self):
@@ -15,12 +16,12 @@ class BrokerAccessor:
     async def connect(self):
         """Установить соединение с RabbitMQ и открыть канал"""
         try:
-            self._connection = await connect_robust(settings.AMQP_URL)
+            self._connection = await connect_robust(AMQP_URL)
             self._channel = await self._connection.channel()
             await self._channel.set_qos(prefetch_count=5)
             self._exchange = await self._channel.declare_exchange(settings.RABBITMQ_EXCHANGE, type=ExchangeType.DIRECT, durable=True)
         except Exception as e:
-            raise RuntimeError("Broker connection failed")
+            raise RuntimeError(f"Broker connection failed {e}")
 
     async def get_channel(self) -> Channel:
         """Возвращает текущий канал RabbitMQ"""

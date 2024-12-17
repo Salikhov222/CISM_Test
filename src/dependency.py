@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database import get_session
 from src.repository import TaskRepository
 from src.service import TasksService
-from src.broker.accessor import BrokerAccessor
+from src.broker.accessor import BrokerAccessor, broker
 from src.config import settings
 
 
@@ -16,8 +16,6 @@ async def get_task_repository(
     return TaskRepository(db_session=db_session)
 
 async def get_broker() -> BrokerAccessor:
-    from src.main import broker
-
     return broker
 
 async def get_tasks_service(

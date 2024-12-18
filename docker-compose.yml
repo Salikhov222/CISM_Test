@@ -13,8 +13,8 @@ services:
       - db
       - rabbitmq
     volumes:
-      - ./src:/src
-      - ./tests:/tests
+      - ./src:/app/src
+      - ./tests:/app/tests
 
   worker:
     build:

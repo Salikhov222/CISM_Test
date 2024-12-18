@@ -21,11 +21,11 @@ run:	# Run the application using uvicorn with provided arguments or defaults
 	uvicorn src.main:app --host  $(HOST) --port $(PORT) --reload --env-file .env
 
 test: up	# Run unit tests
-	docker compose run --rm --no-deps --entrypoint=pytest app /tests/unit
+	docker compose run --rm --no-deps --entrypoint=pytest app /app/tests/unit
 
 migrations:		# Create a new revision migration and run migration
-	alembic revision --autogenerate -m "initial"
-	alembic upgrade head
+	docker compose run --rm app alembic revision --autogenerate -m "initial"
+	docker compose run --rm app alembic upgrade head
 
 logs-worker:	# Show log app service
 	docker compose logs --tail=25 worker

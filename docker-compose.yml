@@ -15,6 +15,7 @@ services:
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests
+      - ./alembic:/app/alembic
 
   worker:
     build:

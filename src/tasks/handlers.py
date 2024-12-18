@@ -1,9 +1,9 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 
-from src.schemas import Task, TaskCreate, TaskStatus, ErrorSchema
-from src.service import TasksService
+from src.tasks.schemas import Task, TaskCreate, TaskStatus, ErrorSchema
+from src.tasks.service import TasksService
 from src.dependency import get_tasks_service
 from src.exceptions import TaskNotFound, PublishTaskToBroker
 

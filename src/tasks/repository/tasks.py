@@ -1,9 +1,9 @@
-from sqlalchemy import select, insert, update
+from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.exceptions import TaskNotFound
-from src.schemas import TaskCreate
-from src.models import Tasks
+from src.tasks.schemas import TaskCreate
+from src.tasks.models import Tasks
 
 
 class TaskRepository:

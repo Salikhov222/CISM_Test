@@ -4,7 +4,7 @@ from sqlalchemy import String, DateTime, Integer, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
-from src.database import Base
+from src.infrastructure.database import Base
 
 
 class Tasks(Base):

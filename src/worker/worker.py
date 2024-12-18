@@ -6,10 +6,10 @@ import json
 from aio_pika import IncomingMessage
 from sqlalchemy import exc
 
-from src.broker.accessor import BrokerAccessor, broker
-from src.schemas import TaskStatus
-from src.repository import TaskRepository
-from src.database.accessor import AsyncSessionFactory
+from src.infrastructure.broker.accessor import BrokerAccessor, broker
+from src.tasks.schemas import TaskStatus
+from src.tasks.repository import TaskRepository
+from src.infrastructure.database.accessor import AsyncSessionFactory
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

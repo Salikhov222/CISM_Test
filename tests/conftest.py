@@ -3,8 +3,8 @@ import datetime
 
 from unittest.mock import AsyncMock
 
-from src.service import TasksService
-from src.schemas import Task, TaskCreate
+from src.tasks.service import TasksService
+from src.tasks.schemas import Task, TaskCreate
 
 
 @pytest.fixture

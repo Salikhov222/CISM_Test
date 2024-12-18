@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database import get_session
-from src.repository import TaskRepository
-from src.service import TasksService
-from src.broker.accessor import BrokerAccessor, broker
+from src.infrastructure.database import get_session
+from src.tasks.repository import TaskRepository
+from src.tasks.service import TasksService
+from src.infrastructure.broker.accessor import BrokerAccessor, broker
 from src.config import settings
 
 

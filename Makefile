@@ -6,7 +6,7 @@ PORT ?= 8000
 export COMPOSE_DOCKER_CLI_BUILD=1
 export DOCKER_BUILDKIT=1
 
-all: down build up		# Stop, build and deploy all services
+all: down build up migrations 		# Stop, build and deploy all services
 
 build:	# Assembling images
 	docker compose build
@@ -20,14 +20,18 @@ down:	# Stop all services and remove containers
 run:	# Run the application using uvicorn with provided arguments or defaults
 	uvicorn src.main:app --host  $(HOST) --port $(PORT) --reload --env-file .env
 
-migrate-create:		# Create a new revision migration
-	alembic revision --autogenerate -m "$(MIGRATE)"
+test: up	# Run unit tests
+	docker compose run --rm --no-deps --entrypoint=pytest app /tests/unit
 
-migrate-apply:		# Run migration
+migrations:		# Create a new revision migration and run migration
+	alembic revision --autogenerate -m "initial"
 	alembic upgrade head
 
-logs:
-		docker compose logs --tail=25 worker
+logs-worker:	# Show log app service
+	docker compose logs --tail=25 worker
+
+logs-app:		# Show logs worker service
+	docker compose logs --tail=25 app
 
 help:	# Show this help message
 	@echo "Usage: make [command]"

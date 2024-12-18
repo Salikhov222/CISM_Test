@@ -1,7 +1,7 @@
-from src.repository import TaskRepository
-from src.schemas import Task, TaskCreate
+from src.tasks.repository import TaskRepository
+from src.tasks.schemas import Task, TaskCreate
 from src.exceptions import TaskNotFound, PublishTaskToBroker
-from src.broker.accessor import BrokerAccessor
+from src.infrastructure.broker.accessor import BrokerAccessor
 from src.config import settings
 
 
